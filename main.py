@@ -14,6 +14,9 @@ DEFAULT_THRESHOLD = 650
 THRESHOLD_PIXEL = DEFAULT_THRESHOLD
 JSON_PATH = "parking_slots.json"
 
+PROJECT_DIR = os.path.dirname(os.path.abspath(__file__))
+DATA_DIR = os.path.join(PROJECT_DIR, "data")
+
 VIDEO_PATH = None
 cap = None
 parking_slots = []
@@ -45,8 +48,15 @@ def load_slots():
 def select_video():
     global VIDEO_PATH, cap
 
-    Tk().withdraw()
-    path = askopenfilename(filetypes=[("Video files", "*.mp4 *.avi")])
+    root = Tk()
+    root.withdraw()
+
+    initial_dir = DATA_DIR if os.path.isdir(DATA_DIR) else PROJECT_DIR
+    path = askopenfilename(
+        initialdir=initial_dir,
+        filetypes=[("Video files", "*.mp4 *.avi"), ("All files", "*.*")],
+    )
+    root.destroy()
 
     if path:
         VIDEO_PATH = os.path.abspath(path)
